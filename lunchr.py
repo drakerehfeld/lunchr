@@ -20,19 +20,17 @@ def handle_command(command, channel):
         returns back what it needs for clarification.
     """
     response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
-               "* command with numbers, delimited by spaces."
+               "* command to get a lunch date!"
     if command.startswith(EXAMPLE_COMMAND):
         allUsers = slack_client.api_call("users.list")['members']
         allUsernames = set()
 
         for each in allUsers: # this is inefficient but it cleans the bad data
-            allUsernames.add(each['name'])
+            allUsernames.add(each['id'])
 
         user1, user2 = random.sample(allUsernames,2)
-        print(user1)
-        print(user2)
 
-        response = "You're eating lunch with: @" + user1 + " and @" user2 + " this week :partyparrot:"
+        response = "You're eating lunch with: <@" + user1 + "> and <@" + user2 +"> this week :partyparrot:"
     
     slack_client.api_call("chat.postMessage", channel=channel,
                           text=response, as_user=True)
